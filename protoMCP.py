@@ -2,7 +2,7 @@ import os
 from mcp.server.fastmcp import FastMCP
 import psycopg2
 
-mcp = FastMCP(name="Igor's_first_MCP", 
+mcp = FastMCP(name="SQL_first_MCP", 
               instructions="Created for testing purpose, to check MCP SQL")
 
 def load_properties():
