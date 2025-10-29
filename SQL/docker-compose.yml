@@ -1,0 +1,18 @@
+name: postgresTestMCP
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgresTestMCP
+    restart: always
+    environment:
+      POSTGRES_USER: git_user
+      POSTGRES_PASSWORD: git_password
+      POSTGRES_DB: git_database
+      TZ: Europe/Kyiv
+      POSTGRES_INITDB_ARGS: "--data-checksums --locale=en_US.UTF-8 --encoding=UTF8"
+    command: ["postgres", "-c", "timezone=Europe/Kyiv"]
+    ports:
+      - "5455:5432"
+    volumes:  
+      - ./data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
