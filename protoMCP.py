@@ -39,6 +39,29 @@ def get_sales_persons():
 
     return salesList    
 
+@mcp.tool()
+def insert_product(sales_id: int, product_name: str, product_quantity: int, product_price: int):
+    props = load_properties()
+    conn = psycopg2.connect(
+            host=props.get('host'),
+            port=props.get('port'),
+            database=props.get('database'),
+            user=props.get('user'),
+            password=props.get('password')
+        )
+    cur = conn.cursor()
+
+    query = "INSERT INTO sales.product (employee_id, name, count, price) VALUES (%s, %s, %s, %s) RETURNING id ;"
+    cur.execute(query, (sales_id, product_name,product_quantity,product_price))
+
+    new_id = cur.fetchone()[0]
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return {"status": "ok", "id": new_id}
+
 
 if __name__ == "__main__":
     mcp.run()
