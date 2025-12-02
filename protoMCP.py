@@ -18,19 +18,21 @@ def load_properties():
             props[key.strip()] = value.strip()
     return props
 
+def read_props(connectionProps):
+    return psycopg2.connect(
+            host=connectionProps.get('host'),
+            port=connectionProps.get('port'),
+            database=connectionProps.get('database'),
+            user=connectionProps.get('user'),
+            password=connectionProps.get('password')
+        )
+
 @mcp.tool()
 def get_sales_persons():
     props = load_properties()
 
     try:
-        connection = psycopg2.connect(
-            host=props.get('host'),
-            port=props.get('port'),
-            database=props.get('database'),
-            user=props.get('user'),
-            password=props.get('password')
-        )
-
+        connection = read_props(props)
         cursor = connection.cursor()
         cursor.execute("select * from sales.employee order by id desc;")
         salesList = cursor.fetchall()
@@ -42,13 +44,7 @@ def get_sales_persons():
 @mcp.tool()
 def insert_product(sales_id: int, product_name: str, product_quantity: int, product_price: int):
     props = load_properties()
-    conn = psycopg2.connect(
-            host=props.get('host'),
-            port=props.get('port'),
-            database=props.get('database'),
-            user=props.get('user'),
-            password=props.get('password')
-        )
+    conn = read_props(props)
     cur = conn.cursor()
 
     query = "INSERT INTO sales.product (employee_id, name, count, price) VALUES (%s, %s, %s, %s) RETURNING id ;"
