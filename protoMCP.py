@@ -42,6 +42,20 @@ def get_sales_persons():
     return salesList    
 
 @mcp.tool()
+def get_products():
+    props = load_properties()
+
+    try:
+        connection = read_props(props)
+        cursor = connection.cursor()
+        cursor.execute("select * from sales.product order by id desc;")
+        productsList = cursor.fetchall()
+    except Exception as e:
+        return None, None
+
+    return productsList  
+
+@mcp.tool()
 def insert_product(sales_id: int, product_name: str, product_quantity: int, product_price: int):
     props = load_properties()
     conn = read_props(props)
